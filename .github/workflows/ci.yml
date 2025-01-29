@@ -27,7 +27,31 @@ jobs:
         run: |
           poetry install
 
+      # --- Run Unit tests and check coverage --- #
+
       - name: Run Unit Tests with Coverage
         run: |
           poetry run pytest --cov=ffreedom_expenses --cov-fail-under=90
 
+      # --- Run Behave Tests --- #
+
+      - name: Download Wait-for-it Script
+        run: curl -o wait-for-it.sh https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh
+        shell: bash
+
+      - name: Start Flask App in Background
+        run: |
+          poetry run python run.py &
+          chmod +x wait-for-it.sh
+          ./wait-for-it.sh localhost:5000 --timeout=10
+
+      - name: Run Behave Tests
+        run: |
+          poetry run behave -D base_url=http://localhost:5000
+
+      # --- Clean Up --- #
+
+      - name: Stop Flask App
+        if: always()
+        run: |
+          pkill -f "python run.py" || true
