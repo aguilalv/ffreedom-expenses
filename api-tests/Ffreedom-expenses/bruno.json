@@ -1,0 +1,9 @@
+{
+  "version": "1",
+  "name": "Ffreedom-expenses",
+  "type": "collection",
+  "ignore": [
+    "node_modules",
+    ".git"
+  ]
+}
