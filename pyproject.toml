@@ -13,7 +13,18 @@ flask = "^3.1.0"
 [tool.poetry.group.dev.dependencies]
 behave = "^1.2.6"
 requests = "^2.32.3"
+pytest = "^8.3.4"
+pytest-cov = "^6.0.0"
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.coverage.run]
+branch = true
+source = ["ffreedom_expenses"]
+
+[tool.coverage.report]
+fail_under = 90
+show_missing = true
+
