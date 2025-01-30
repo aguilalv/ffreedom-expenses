@@ -1,5 +1,6 @@
 from flask import Flask
 
+
 def create_app():
     """
     Application factory function.
@@ -8,6 +9,7 @@ def create_app():
 
     # Register blueprints
     from .hello import hello_bp
+
     app.register_blueprint(hello_bp, url_prefix="/hello")
 
     return app
