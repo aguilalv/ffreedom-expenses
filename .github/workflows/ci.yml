@@ -27,6 +27,20 @@ jobs:
         run: |
           poetry install
 
+      # --- Static Analysis --- #
+
+      - name: Run Ruff (Linting)
+        run: |
+          poetry run ruff check .
+
+      - name: Run Black (Formatting Check)
+        run: |
+          poetry run black --check .
+
+      - name: Run Pip-Audit (Security Check)
+        run: |
+          poetry run pip-audit
+
       # --- Run Unit tests and check coverage --- #
 
       - name: Run Unit Tests with Coverage
