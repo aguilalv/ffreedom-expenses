@@ -1,0 +1,42 @@
+name: Deploy to Google Cloud Run
+
+on:
+  push:
+    tags:
+      - "v*.*.*"  # Only trigger for version tags (e.g., v1.0.0)
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v3
+
+      - name: Set up Google Cloud SDK
+        uses: google-github-actions/setup-gcloud@v1
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
+          export_default_credentials: true
+
+      - name: Authenticate with Artifact Registry
+        run: gcloud auth configure-docker us-central1-docker.pkg.dev
+
+      - name: Extract Tag Name
+        id: get_version
+        run: echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+
+      - name: Build and Push Docker Image
+        run: |
+          docker build -t us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/ffreedom-docker-repo/ffreedom-expenses:$VERSION .
+          docker push us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/ffreedom-docker-repo/ffreedom-expenses:$VERSION
+
+      - name: Deploy to Google Cloud Run
+        run: |
+          gcloud run deploy ffreedom-expenses \
+            --image us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/ffreedom-docker-repo/ffreedom-expenses:$VERSION \
+            --platform managed \
+            --region us-central1 \
+            --allow-unauthenticated
+
