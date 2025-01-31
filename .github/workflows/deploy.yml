@@ -13,15 +13,27 @@ jobs:
       - name: Check out the repo
         uses: actions/checkout@v3
 
-      - name: Set up Google Cloud SDK
+      # 2. Authenticate with Google Cloud
+      - name: Authenticate with Google Cloud
+        uses: google-github-actions/auth@v1
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      # 3. Set up Google Cloud CLI
+      - name: Set up Google Cloud CLI
         uses: google-github-actions/setup-gcloud@v1
         with:
           project_id: ${{ secrets.GCP_PROJECT_ID }}
-          service_account_key: ${{ secrets.GCP_SA_KEY }}
-          export_default_credentials: true
+          version: 'latest'
 
-      - name: Authenticate with Artifact Registry
-        run: gcloud auth configure-docker us-central1-docker.pkg.dev
+      # 4. Install gcloud beta components (optional, but recommended)
+      # - name: Install gcloud beta components
+      #   run: |
+      #     gcloud components install beta --quiet
+      
+      # 5. Authenticate Docker with Google Artifact Registry
+      - name: Authenticate Docker with GAR
+        run: gcloud auth configure-docker us-central1-docker.pkg.dev --quiet
 
       - name: Extract Tag Name
         id: get_version
