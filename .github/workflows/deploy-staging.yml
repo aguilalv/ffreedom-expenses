@@ -44,3 +44,15 @@ jobs:
             --region us-central1 \
             --allow-unauthenticated
 
+      # --- Run Behave Tests --- #
+
+      - name: Download and Prepare Wait-for-It Script
+        run: |
+          curl -o wait-for-it.sh https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh
+          chmod +x wait-for-it.sh
+          ./wait-for-it.sh staging.ffreedom-expenses.run.app:443 --timeout=60 --strict
+        shell: bash
+
+      - name: Run Functional Tests Against Staging
+        run: |
+          poetry run behave --define BASE_URL=https://ffexp-staging.aalhub.uk
