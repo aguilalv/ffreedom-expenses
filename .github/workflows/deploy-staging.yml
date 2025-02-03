@@ -47,8 +47,6 @@ jobs:
             --cpu 1 \
             --max-instances 2 \
             --min-instances 0 \
-            --cpu-boost=false
-
 
       # --- Run Behave Tests --- #
 
