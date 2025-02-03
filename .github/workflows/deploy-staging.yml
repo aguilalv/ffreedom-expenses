@@ -42,7 +42,11 @@ jobs:
             --image us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/ffreedom-docker-repo/ffreedom-expenses:staging \
             --platform managed \
             --region us-central1 \
-            --allow-unauthenticated
+            --allow-unauthenticated \
+            --memory 512Mi \
+            --cpu 1 \
+            --max-instances 2 \
+            --min-instances 0 \
 
       # --- Run Behave Tests --- #
 
