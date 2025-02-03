@@ -1,0 +1,11 @@
+#!/bin/sh
+
+# Automatically install pre-commit if it's not installed
+if ! command -v pre-commit >/dev/null 2>&1; then
+  echo "Installing pre-commit..."
+  poetry run pip install pre-commit
+fi
+
+# Run pre-commit
+poetry run pre-commit run --all-files
+
