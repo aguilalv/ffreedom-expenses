@@ -1,0 +1,43 @@
+name: Run Functional Tests on Production
+
+on:
+  workflow_run:
+    workflows: ["Deploy to Production"]  # Runs after the production deployment
+    types:
+      - completed
+
+jobs:
+  test-production:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v3
+
+      - name: Set up Python & Poetry
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.12"
+      
+      - name: Install Poetry
+        run: |
+          curl -sSL https://install.python-poetry.org | python3 -
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+
+      - name: Install Dependencies
+        run: |
+          poetry install --only dev
+
+      # --- Wait for Production Deployment ---
+      - name: Wait for Production Server to Be Ready
+        run: |
+          curl -o wait-for-it.sh https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh
+          chmod +x wait-for-it.sh
+          ./wait-for-it.sh ffexp.aalhub.uk:443 --timeout=60 --strict
+        shell: bash
+
+      # --- Run Functional Tests ---
+      - name: Run Functional Tests Against Production
+        run: |
+          poetry run behave --define BASE_URL=https://ffexp.aalhub.uk
+

@@ -58,13 +58,13 @@ jobs:
 
       - name: Install Dependencies
         run: |
-          poetry install
+          poetry install --only dev
 
-      - name: Download and Prepare Wait-for-It Script
+      - name: Wait for Production Server to Be Ready
         run: |
           curl -o wait-for-it.sh https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh
           chmod +x wait-for-it.sh
-          ./wait-for-it.sh staging.ffreedom-expenses.run.app:443 --timeout=60 --strict
+          ./wait-for-it.sh ffexp-staging.aalhub.uk:443 --timeout=60 --strict
         shell: bash
 
       - name: Run Functional Tests Against Staging
