@@ -2,7 +2,7 @@ name: Run Functional Tests on Production
 
 on:
   workflow_run:
-    workflows: ["Deploy to Production"]  # Runs after the production deployment
+    workflows: ["Deploy to Google Cloud Run"]  # Runs after the production deployment
     types:
       - completed
 
