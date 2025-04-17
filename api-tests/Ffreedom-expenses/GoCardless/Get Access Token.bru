@@ -1,0 +1,39 @@
+meta {
+  name: Get Access Token
+  type: http
+  seq: 2
+}
+
+post {
+  url: https://bankaccountdata.gocardless.com/api/v2/token/new/
+  body: multipartForm
+  auth: none
+}
+
+headers {
+  accept: application/json
+  Content-Type: application/json
+}
+
+body:multipart-form {
+  secret_id: {{gocardless_secret_id}}
+  secret_key: {{gocardless_secret_key}}
+}
+
+script:post-response {
+  const body = res.getBody();
+  
+  let json;
+  try {
+    json = typeof body === 'string' ? JSON.parse(body) : body;
+  } catch (e) {
+    console.error('⚠️ failed to parse JSON:', e, body);
+    return;
+  }
+  
+  if (!json.access) {
+    console.error('⚠️ no `access` field in response:', json);
+  } else {
+    bru.setVar('access_token', json.access);
+  }
+}

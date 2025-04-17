@@ -1,0 +1,16 @@
+meta {
+  name: Request transactions
+  type: http
+  seq: 7
+}
+
+get {
+  url: https://bankaccountdata.gocardless.com/api/v2/accounts/{{account_id}}/transactions/
+  body: none
+  auth: none
+}
+
+headers {
+  accept: application/json
+  Authorization: Bearer {{access_token}}
+}

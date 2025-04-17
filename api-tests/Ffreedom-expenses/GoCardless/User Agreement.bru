@@ -1,0 +1,48 @@
+meta {
+  name: User Agreement
+  type: http
+  seq: 4
+}
+
+post {
+  url: https://bankaccountdata.gocardless.com/api/v2/agreements/enduser/
+  body: json
+  auth: none
+}
+
+headers {
+  accept: application/json
+  Content-Type: application/json
+  Authorization: Bearer {{access_token}}
+}
+
+body:json {
+  {
+    "institution_id": "SANDBOXFINANCE_SFIN0000",
+    "max_historical_days": "90",
+    "access_valid_for_days": "30",
+    "access_scope": [
+      "balances",
+      "details",
+      "transactions"
+    ]
+  }
+}
+
+script:post-response {
+  const body = res.getBody();
+  
+  let json;
+  try {
+    json = typeof body === 'string' ? JSON.parse(body) : body;
+  } catch (e) {
+    console.error('⚠️ failed to parse JSON:', e, body);
+    return;
+  }
+  
+  if (!json.id) {
+    console.error('⚠️ no `id` field in response:', json);
+  } else {
+    bru.setVar('user_agreement_id', json.id);
+  }
+}
