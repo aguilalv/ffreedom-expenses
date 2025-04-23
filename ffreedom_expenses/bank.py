@@ -1,4 +1,4 @@
-from flask import Blueprint, Response
+from flask import Blueprint
 
 bank_bp = Blueprint("bank", __name__, url_prefix="/bank")
 
