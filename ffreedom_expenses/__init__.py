@@ -9,7 +9,9 @@ def create_app():
 
     # Register blueprints
     from .hello import hello_bp
+    from .bank import bank_bp
 
     app.register_blueprint(hello_bp, url_prefix="/hello")
+    app.register_blueprint(bank_bp, url_prefix="/bank")
 
     return app
