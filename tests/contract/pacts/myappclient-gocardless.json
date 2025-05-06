@@ -1,0 +1,42 @@
+{
+  "consumer": {
+    "name": "MyAppClient"
+  },
+  "provider": {
+    "name": "GoCardless"
+  },
+  "interactions": [
+    {
+      "description": "a request for an access token",
+      "providerState": "valid secret credentials",
+      "request": {
+        "method": "post",
+        "path": "/api/v2/token/new/",
+        "headers": {
+          "Accept": "application/json",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "secret_id": "test_id",
+          "secret_key": "test_secret"
+        }
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "access_token": "test_access_token",
+          "token_type": "bearer",
+          "expires_in": 3600
+        }
+      }
+    }
+  ],
+  "metadata": {
+    "pactSpecification": {
+      "version": "2.0.0"
+    }
+  }
+}
